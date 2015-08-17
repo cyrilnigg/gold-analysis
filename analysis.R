@@ -1,5 +1,6 @@
 library("forecast")
 library("MASS")
+library("ggplot2")
 
 #Set this to the appropriate directory
 setwd("~/r/gold-analysis")
@@ -44,8 +45,17 @@ GoldSixMonth <- gold$Gold[7:nrow(gold)]
 GoldSixMonth[(nrow(gold)-6):nrow(gold)] <- NA
 gold$GoldSixMonth <- GoldSixMonth
 
+USD.change <- gold$US.Dollar.Index[-1]
+USD.change <- log(USD.change/gold$US.Dollar.Index[1:(nrow(gold)-1)])
+USD.change[nrow(gold)] <- NA
+gold$USD.change <- USD.change
+
 #Look at perecent change month-to-month as a log
-plot(log(gold$GoldNextMonth/gold$Gold))
+log.mom.gold <- log(gold$GoldNextMonth/gold$Gold)
+
+
+plot(log.mom.gold, type="l")
+plot(log.mom.gold, USD.change)
 
 ##### DIVIDE DATA INTO TRAINING / TEST ######
 
